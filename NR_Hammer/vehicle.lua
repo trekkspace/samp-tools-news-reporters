@@ -79,7 +79,13 @@ function vehicle_price(v_exhange, v_price)
     })
 end
 
-local function trade_vehicle(player_name, player_number, veh_exchange, veh_name, veh_days, veh_km, veh_hidd, veh_price)
+local function trade_vehicle(player_name, player_number, veh_exchange, veh_name, veh_days, veh_km, veh_hidd, veh_price, veh_vip)
+
+    if veh_vip then
+        veh_vip = ' VIP'
+    else
+        veh_vip = ''
+    end
 
     local v_days_check = string.gsub(veh_days, "%.", "")
     local v_km_check = string.gsub(veh_km, "%.", "")
@@ -125,10 +131,11 @@ local function trade_vehicle(player_name, player_number, veh_exchange, veh_name,
         return  "Invalid hidden. Place 'x0' for a default value."
     end
 
-    local format_input = interp("${player} ${exchange} ${vehicle}${days}${km}${hidd}${money}, [/sms ${number}].", {
+    local format_input = interp("${player} ${exchange} ${vehicle}${vip}${days}${km}${hidd}${money}, [/sms ${number}].", {
         player = player_name,
         exchange = property_exchange_type[veh_exchange],
         vehicle = veh_name,
+        vip = veh_vip,
         days = vehicle_days(veh_days),
         km = vehicle_km(v_days, veh_km, veh_hidd),
         hidd = vehicle_hidden(v_days, v_km, hidden[veh_hidd]),

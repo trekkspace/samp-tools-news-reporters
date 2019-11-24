@@ -186,7 +186,8 @@ function get_input()
             i_car.days.v or "0",
             i_car.km.v or "0",
             i_car.hidd.v,
-            i_car.price.v or "0")
+            i_car.price.v or "0",
+            i_car.veh_vip.v)
     end
 
     if property_selected["property"].v == 'house' then
@@ -378,7 +379,7 @@ function imgui.OnDrawFrame()
 
             imgui.Columns(2);
             if imgui.Checkbox('VIP', i_car.veh_vip) then
-              get_input()
+                get_input()
             end
 
             -- car model
