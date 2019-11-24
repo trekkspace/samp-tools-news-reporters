@@ -3,6 +3,9 @@
 Acest script este inca in teste, nu este recomandat sa il folositi pe /news, inca.
 Scris in Lua.
 
+Cum arata in joc?
+https://imgur.com/a/hA6YzZ0
+
 ## Instalare
 
 1. Descarcati MoonLoader de pe [https://gtaforums.com/topic/890987-moonloader/](https://gtaforums.com/topic/890987-moonloader/). La sectiunea DOWNLOAD, descarcati arhiva si copiati toate fisiere din arhiva in folderul cu GTA San Andreas.
