@@ -8,6 +8,62 @@ local car_list = require("NR_Hammer.list.cars")
 local bizz_list = require("NR_Hammer.list.bizz_type")
 local location_list = require("NR_Hammer.list.locations")
 
+imgui.SwitchContext()
+local style = imgui.GetStyle()
+local colors = style.Colors
+local clr = imgui.Col
+local ImVec4 = imgui.ImVec4
+colors[clr.Text] = ImVec4(0.06, 0.07, 0.08, 1.00)
+colors[clr.TextDisabled]           = ImVec4(0.53, 0.53, 0.53, 1.00)
+colors[clr.WindowBg]               = ImVec4(1.00, 1.00, 1.00, 1.00)
+colors[clr.ChildWindowBg]          = ImVec4(0.00, 0.00, 0.00, 0.00)
+colors[clr.PopupBg]                = ImVec4(0.05, 0.05, 0.10, 0.90)
+colors[clr.ComboBg]                = ImVec4(0.16, 0.24, 0.22, 0.60)
+colors[clr.Border]                 = ImVec4(1.00, 0.00, 0.00, 1.00)
+colors[clr.BorderShadow]           = ImVec4(0.00, 0.00, 0.00, 0.00)
+colors[clr.FrameBg]                = ImVec4(0.44, 0.80, 0.80, 0.18)
+colors[clr.FrameBgHovered]         = ImVec4(0.44, 0.80, 0.80, 0.27)
+colors[clr.FrameBgActive]          = ImVec4(0.44, 0.81, 0.86, 0.66)
+colors[clr.TitleBg]                = ImVec4(0.14, 0.18, 0.21, 0.73)
+colors[clr.TitleBgActive]          = ImVec4(0.02, 0.00, 1.00, 0.77)
+colors[clr.TitleBgCollapsed]       = ImVec4(0.00, 0.00, 0.00, 0.54)
+colors[clr.MenuBarBg]              = ImVec4(0.00, 0.00, 0.00, 0.20)
+colors[clr.ScrollbarBg]            = ImVec4(0.22, 0.29, 0.30, 0.71)
+colors[clr.ScrollbarGrab]          = ImVec4(0.03, 0.09, 0.14, 1.00)
+colors[clr.ScrollbarGrabHovered]   = ImVec4(0.18, 1.00, 0.00, 0.74)
+colors[clr.ScrollbarGrabActive]    = ImVec4(1.00, 0.03, 0.00, 1.00)
+colors[clr.CheckMark]              = ImVec4(0.00, 1.00, 1.00, 0.68)
+colors[clr.SliderGrab]             = ImVec4(0.00, 1.00, 1.00, 0.36)
+colors[clr.SliderGrabActive]       = ImVec4(0.00, 1.00, 1.00, 0.76)
+colors[clr.Button]                 = ImVec4(0.29, 0.29, 0.29, 0.46)
+colors[clr.ButtonHovered]          = ImVec4(0.50, 0.50, 0.50, 0.43)
+colors[clr.ButtonActive]           = ImVec4(0.76, 0.76, 0.76, 0.62)
+colors[clr.Header]                 = ImVec4(1.00, 0.00, 0.00, 0.33)
+colors[clr.HeaderHovered]          = ImVec4(0.00, 1.00, 1.00, 0.42)
+colors[clr.HeaderActive]           = ImVec4(0.00, 1.00, 1.00, 0.54)
+colors[clr.Separator]              = ImVec4(0.50, 0.50, 0.50, 1.00)
+colors[clr.SeparatorHovered]       = ImVec4(0.60, 0.60, 0.70, 1.00)
+colors[clr.SeparatorActive]        = ImVec4(0.70, 0.70, 0.90, 1.00)
+colors[clr.ResizeGrip]             = ImVec4(0.00, 1.00, 1.00, 0.54)
+colors[clr.ResizeGripHovered]      = ImVec4(0.00, 1.00, 1.00, 0.74)
+colors[clr.ResizeGripActive]       = ImVec4(0.00, 1.00, 1.00, 1.00)
+colors[clr.CloseButton]            = ImVec4(1.00, 0.00, 0.00, 1.00)
+colors[clr.CloseButtonHovered]     = ImVec4(0.84, 0.97, 0.00, 0.47)
+colors[clr.CloseButtonActive]      = ImVec4(0.33, 0.00, 0.99, 1.00)
+colors[clr.PlotLines]              = ImVec4(1.00, 1.00, 1.00, 1.00)
+colors[clr.PlotLinesHovered]       = ImVec4(1.00, 1.00, 1.00, 1.00)
+colors[clr.PlotHistogram]          = ImVec4(0.90, 0.70, 0.00, 1.00)
+colors[clr.PlotHistogramHovered]   = ImVec4(1.00, 0.60, 0.00, 1.00)
+colors[clr.TextSelectedBg]         = ImVec4(0.00, 0.00, 1.00, 0.35)
+colors[clr.ModalWindowDarkening]   = ImVec4(0.20, 0.20, 0.20, 035)
+
+style.Alpha = 1
+style.ChildWindowRounding = 3
+style.WindowRounding = 3
+style.GrabRounding = 1
+style.GrabMinSize = 20
+style.FrameRounding = 3
+
 local selected = {
     message = imgui.ImInt(-1),
     location = imgui.ImInt(-1),
@@ -75,7 +131,12 @@ local search = {
   location = imgui.ImBuffer(256)
 }
 
+thisScript()
 
+function sampev.onSendChat(msg)
+    print('reload')
+    thisScript():reload()
+end
 
 -- alt
 local ads_pool = {
@@ -83,10 +144,47 @@ local ads_pool = {
     {name = "player_b", number = '12312', message = "schimb casa in ls cu id 40"},
 }
 
+function interp(s, tab)
+    return (s:gsub('($%b{})', function(w) return tab[w:sub(3, -2)] or w end))
+end
+
+local reporters_numbers = {
+    reporter_scs_number = imgui.ImBuffer(256),
+    reporter_1 = imgui.ImBuffer(256),
+    reporter_2 = imgui.ImBuffer(256),
+    reporter_3 = imgui.ImBuffer(256)
+}
+
+local reporters_names = {
+    reporter_scs_name = imgui.ImBuffer(256),
+    reporter_2_name = imgui.ImBuffer(256),
+    reporter_3_name = imgui.ImBuffer(256),
+    reporter_4_name = imgui.ImBuffer(256)
+}
+
+reporters_numbers.reporter_scs_number.v = "0450"
+reporters_names.reporter_scs_name.v = "donald_trump"
+
+
+local scs_names = {}
+
 local ad_pool = {
     accept = imgui.ImBool(true)
 }
 
+
+function nickid(params)
+    id = tonumber(params)
+    if params and id ~= nil then
+        nick = sampGetPlayerNickname(id)
+        result = sampIsPlayerConnected(id)
+        if result then
+            sampAddChatMessage("CV " .. id .. "wdwd " .. nick, -1)
+        else
+            sampAddChatMessage("nope", -1)
+        end
+    end
+end
 
 local m_text = {}
 
@@ -101,8 +199,10 @@ m_text = m_text_init
 
 local main_window_state = imgui.ImBool(false)
 local second_windows_state = imgui.ImBool(true)
+-- local third_windows_state = imgui.ImBool(true)
 
 local translated_text = imgui.ImBuffer(256)
+local translated_text_err = imgui.ImBool(false)
 
 -- init defaul values
 property_selected.property.v = 'car'
@@ -153,6 +253,7 @@ end
 
 function get_input()
     if m_text.name.v == "" or m_text.number.v == "" then
+        translated_text_err.v = true
         translated_text.v = 'Invalid player name / number.'
         return
     end
@@ -160,7 +261,7 @@ function get_input()
         if i_business.id.v == "" then i_business.id.v = '-1' end
         if i_business.price.v == "" then i_business.price.v = '-1' end
 
-        translated_text.v = t_property.trade_property(
+        local value = t_property.trade_property(
             m_text.name.v,
             m_text.number.v,
             "bizz",
@@ -170,6 +271,14 @@ function get_input()
             i_business.location.v,
             i_business.price.v
         )
+
+        if value.error then
+            translated_text.v = value.message
+            translated_text_err.v = true
+        else
+            translated_text_err.v = false
+            translated_text.v = value.message
+        end
     end
 
     if property_selected["property"].v == 'car' then
@@ -178,7 +287,7 @@ function get_input()
         if i_car.price.v == "" then i_car.price.v = "0" end
         if i_car.hidd.v == "" then i_car.hidd.v = "x0" end
 
-        translated_text.v = t_vehicle.trade_vehicle(
+        local value = t_vehicle.trade_vehicle(
             m_text.name.v,
             m_text.number.v,
             trade_seleted["trade"].v,
@@ -188,6 +297,15 @@ function get_input()
             i_car.hidd.v,
             i_car.price.v or "0",
             i_car.veh_vip.v)
+
+        if value.error then
+            translated_text.v = value.message
+            translated_text_err.v = true
+        else
+            translated_text_err.v = false
+            translated_text.v = value.message
+        end
+        
     end
 
     if property_selected["property"].v == 'house' then
@@ -195,7 +313,7 @@ function get_input()
         if i_house.id.v == "" then i_house.id.v = '-1' end
         if i_house.price.v == "" then i_house.price.v = '-1' end
 
-        translated_text.v = t_property.trade_property(
+        local value = t_property.trade_property(
             m_text.name.v,
             m_text.number.v,
             "house",
@@ -206,6 +324,14 @@ function get_input()
             i_house.price.v
         )
 
+        if value.error then
+            translated_text.v = value.message
+            translated_text_err.v = true
+        else
+            translated_text_err.v = false
+            translated_text.v = value.message
+        end
+
     end
 end
 
@@ -213,8 +339,94 @@ end
 -- frame
 -- frame
 
+
+resX, resY = getScreenResolution()
+
 function imgui.OnDrawFrame()
     if main_window_state.v then
+
+        imgui.SetNextWindowSize(imgui.ImVec2(200, 250), imgui.Cond.Once)
+        imgui.Begin('SCS', third_windows_state)
+        imgui.BeginGroup()
+        if imgui.Button('Org 45/46') then
+
+            -- nickid(reporters_names.reporter_2_name.v)
+            sampSendChat('/f Cine doreste sa participe la AG sa puna "." pe /f')
+        end
+
+        
+        organization_46 = {
+            error = false,
+            message = ""
+        }
+
+        imgui.Text("Model".. organization_46.message)
+
+        if imgui.Button('Org 47') then
+
+
+            if reporters_names.reporter_scs_name.v == "" then
+                organization_46 = {
+                    error = true,
+                    message = "You must add a (s/c/s) reporter."
+                }
+            else
+                organization_46 = {
+                    error = false,
+                    message = "Participanti: " .. reporters_names.reporter_scs_name.v .. " (s/c/s)"
+                }
+            end
+
+       
+            if organization_46.error then
+                printStringNow(organization_46.message, 1000)
+            else
+                if reporters_names.reporter_2_name.v ~= "" then
+                    if reporters_names.reporter_3_name.v ~= "" or reporters_names.reporter_4_name.v ~= "" then
+                        organization_46.message = organization_46.message .. " ," .. reporters_names.reporter_2_name.v
+                    else
+                        organization_46.message = organization_46.message .. " si " .. reporters_names.reporter_2_name.v
+                    end
+                end
+                if reporters_names.reporter_3_name.v ~= "" then
+                    if reporters_names.reporter_2_name.v ~= "" or reporters_names.reporter_4_name.v ~= "" then
+                        organization_46.message = organization_46.message .. " ," .. reporters_names.reporter_3_name.v
+                    else
+                        organization_46.message = organization_46.message .. " si " .. reporters_names.reporter_3_name.v
+                    end
+                end
+    
+                if reporters_names.reporter_4_name.v ~= "" then
+                    organization_46.message = organization_46.message .. " si " .. reporters_names.reporter_4_name.v
+                end
+                sampSendChat('/f ' .. organization_46.message)
+            end
+        end
+
+        imgui.EndGroup()
+
+        imgui.Text('Add  {1E90FF} player number.')
+
+        if imgui.InputText('Reporter SCS', reporters_names.reporter_scs_name) then
+
+        end
+
+        if imgui.InputText('Reporter 2', reporters_names.reporter_2_name) then
+
+        end
+
+        if imgui.InputText('Reporter 3', reporters_names.reporter_3_name) then
+
+        end
+
+        if imgui.InputText('Reporter 4', reporters_names.reporter_4_name) then
+
+        end
+
+        imgui.End()
+
+        imgui.SetNextWindowSize(imgui.ImVec2(350, 250), imgui.Cond.Once)
+		imgui.SetNextWindowPos(imgui.ImVec2(resX - 400, resY / 2 - 180), imgui.Cond.Once)
         imgui.Begin('Ad Pool', second_windows_state)
 
         imgui.BeginGroup()
@@ -258,24 +470,42 @@ function imgui.OnDrawFrame()
         end
         imgui.End()
 
-
+        imgui.SetNextWindowSize(imgui.ImVec2(350, 400), imgui.Cond.Once)
+		imgui.SetNextWindowPos(imgui.ImVec2(resX - 400, resY - 450), imgui.Cond.Once)
         imgui.Begin('News Reporters', main_window_state)
 
         imgui.TextWrapped('Ad: ' .. m_text.message)
         imgui.Separator()
-        imgui.TextWrapped("News: " .. translated_text.v)
+        if translated_text_err.v then
+            imgui.TextWrapped("Error: " .. translated_text.v)
+        else
+            imgui.TextWrapped("News: " .. translated_text.v)
+        end
+
         imgui.Separator()
         imgui.BeginGroup()
         if imgui.Button('/cw') then
-          sampSendChat('/cw ' .. translated_text.v)
+          if translated_text_err.v then
+            printStringNow(translated_text.v, 2000)
+          else
+            sampSendChat('/cw ' .. translated_text.v)
+          end
         end
         imgui.SameLine()
         if imgui.Button('/news ') then
-          sampSendChat("/news ".. translated_text.v)
+          if translated_text_err.v then
+            printStringNow(translated_text.v, 2000)
+          else
+            sampSendChat("/news ".. translated_text.v)
+          end
         end
         imgui.SameLine()
         if imgui.Button("Chat") then
-          sampSendChat(translated_text.v)
+          if translated_text_err.v then
+            printStringNow(translated_text.v, 2000)
+          else
+            sampSendChat(translated_text.v)
+          end
         end
 
         imgui.EndGroup()
@@ -584,7 +814,7 @@ function imgui.OnDrawFrame()
 
               if trade_seleted["trade"].v == "sell" or trade_seleted["trade"].v == "buy" then
               if imgui.Button('No H Price') then
-                  i_house.price = "-1"
+                  i_house.price.v = "-1"
               end
               if imgui.InputText('H Price', i_house.price) then
                   get_input()
@@ -592,7 +822,7 @@ function imgui.OnDrawFrame()
 
             end
             if imgui.Button('No H ID') then
-                i_house.id = "-1"
+                i_house.id.v = "-1"
             end
             if imgui.InputText('H ID', i_house.id) then
                 get_input()

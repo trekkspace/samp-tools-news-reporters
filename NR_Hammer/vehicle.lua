@@ -93,7 +93,10 @@ local function trade_vehicle(player_name, player_number, veh_exchange, veh_name,
     local v_km = tonumber(v_km_check)
     -- verify for fraud
     if property_exchange_type[veh_exchange] == nil then
-        return  "Car exchange type is invalid. Must be [sell/buy/exchange/both]."
+        return {
+            error = true,
+            message = "Car exchange type is invalid. Must be [sell/buy/exchange/both]."
+        }
     end
 
     if veh_days == "up" or veh_days == "down" then
@@ -101,7 +104,10 @@ local function trade_vehicle(player_name, player_number, veh_exchange, veh_name,
         v_days = 1
     else
         if type(v_days) ~= "number" or v_days < 0 then
-            return  "Invalid vehicle days."
+            return {
+                error = true,
+                message = "Invalid vehicle days."
+            }
         end
     end
 
@@ -111,7 +117,10 @@ local function trade_vehicle(player_name, player_number, veh_exchange, veh_name,
     else
 
         if type(v_km) ~= "number" or v_km < 0 then
-            return  "Invalid vehicle kilometers."
+            return {
+                error = true,
+                message = "Invalid vehicle kilometers."
+            }
         end
     end
 
@@ -124,11 +133,17 @@ local function trade_vehicle(player_name, player_number, veh_exchange, veh_name,
 
     printStringNow(veh_name)
     if inTable(cars, veh_name) == false then
-        return  "Invalid vehicle name."
+        return {
+            error = true,
+            message = "Invalid vehicle name."
+        }
     end
 
     if hidden[veh_hidd]== nil then
-        return  "Invalid hidden. Place 'x0' for a default value."
+        return {
+            error = true,
+            message = "Invalid hidden. Place 'x0' for a default value."
+        }
     end
 
     local format_input = interp("${player} ${exchange} ${vehicle}${vip}${days}${km}${hidd}${money}, [/sms ${number}].", {
@@ -143,7 +158,10 @@ local function trade_vehicle(player_name, player_number, veh_exchange, veh_name,
         number = player_number
     })
 
-    return format_input
+    return {
+        error = false,
+        message = format_input
+    }
 end
 
 return {
