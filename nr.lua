@@ -131,11 +131,13 @@ local search = {
   location = imgui.ImBuffer(256)
 }
 
-thisScript()
 
-function sampev.onSendChat(msg)
-    print('reload')
-    thisScript():reload()
+
+function sampev.onSendCommand(command)
+    if command == '/rscript' then
+        sampAddChatMessage('{FF4500}Script reloaded.')
+        thisScript():reload()
+    end
 end
 
 -- alt
