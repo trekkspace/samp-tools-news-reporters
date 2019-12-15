@@ -122,36 +122,52 @@ local function trade_property(player_name, player_number, property_type, propert
     -- check for fraud :)))))
         -- verify property exchange type
     if property_exchange_type[p_exchange] == nil then
-        return print("House exchange type is invalid. Must be [sell/buy/exchange/both].")
+        return {
+            error = true,
+            message = "House exchange type is invalid. Must be [sell/buy/exchange/both]."
+        }
     end
 
         -- verify property_type
     if prop_type[p_type] == nil then
-        return "Property type is invalid. Must be either 'house' or 'bizz'"
+        return {
+            error = true,
+            message = "Property type is invalid. Must be either 'house' or 'bizz'"
+        }
     end
         -- verify property for id
     if p_id == nil then
-        return "Property ID is not valid."
+        return {
+            error = true,
+            message = "Property ID is not valid."
+        }
     else
             -- check house id if is in range
         if property == "house" and (p_id ~= -1 and (p_id < property_id_limit.house_min_id or p_id > property_id_limit.house_max_id)) then
-            return "House ID out of range."
+            return {
+                error = true,
+                message = "House ID out of range."
+            }
         end
 
             -- check bizz id if is in range
         if property == "bizz" and (p_id ~= -1 and (p_id < property_id_limit.bizz_min_id or p_id > property_id_limit.bizz_max_id)) then
-            return "Bizz ID out of range"
+            return {
+                error = true,
+                message = "Bizz ID out of range"
+            }
         end
     end
 
         -- verify property_interior
     if property == "house" and prop_house_type[p_interior] == nil then
-        return "House interior type is invalid."
+        return {
+            error = true,
+            message = "House interior type is invalid."
+        }
     end
 
 
-    -- print("Here problem")
-    print(p_interior)
     function contains(list, x)
         for _, v in pairs(list) do
             if v == x then return true end
@@ -159,7 +175,10 @@ local function trade_property(player_name, player_number, property_type, propert
         return false
     end
     if property == "bizz" and contains(prop_bizz_type, p_interior) == false then
-        return "Bizz interior type is invalid."
+        return {
+            error = true,
+            message = "Bizz interior type is invalid."
+        }
     end
     
     -- if property == "bizz" and prop_bizz_type[p_interior] == nil then
@@ -173,14 +192,20 @@ local function trade_property(player_name, player_number, property_type, propert
     end
     p_location = loc:sub(2)
     if prop_location[p_location] == nil then
-        return "Propery location is invalid."
+        return {
+            error = true,
+            message = "Propery location is invalid."
+        }
     end
 
         -- verify property property price
         -- property price is a string due to the input from the game console
         -- ex 1500, in the game console would be printed as 1.500, with a dot
     if (p_price_check ~= "-1" and type(tonumber(p_price_check)) ~= "number") or tonumber(p_price_check) < -1 or p_price_check == "0" then
-        return "Invalid property price."
+        return {
+            error = true,
+            message = "Invalid property price."
+        }
     end
 
     -- ______ --
@@ -199,7 +224,10 @@ local function trade_property(player_name, player_number, property_type, propert
         price = place_property_price(p_exchange, p_id, p_interior, p_location, p_price)
     })
 
-    return format_input
+    return {
+        error = false,
+        message = format_input
+    }
 
 end
 
