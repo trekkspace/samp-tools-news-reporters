@@ -1,13 +1,13 @@
 # Easy News Reporters Group Activity.
 
-Imgui Tool for the Romanian Bugged RP Server. 
-Writed in Lua.
+Imgui Tool for the Romanian Bugged SA:MP Server. 
+Script written in Lua.
 
 How does it look in the game?
 https://imgur.com/a/hA6YzZ0
-
-## Instalation
-# Follow all the steps
+ 
+# Installation
+## Follow all the steps
 
 1. Download the MoonLoader arhive from [https://gtaforums.com/topic/890987-moonloader/](here) and copy all the files in the main game folder where GTA SA is installed.
 2. From this Github page at 'Clone or Download' download in the ZIP format the files from  section.
