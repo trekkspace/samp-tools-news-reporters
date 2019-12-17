@@ -1,6 +1,6 @@
-# Script pentru AG-uri
+# Easy News Reporters Group Activity.
 
-Imgui Tool for the Romanian Bugged RP Server.
+Imgui Tool for the Romanian Bugged RP Server. 
 Writed in Lua.
 
 How does it look in the game?
